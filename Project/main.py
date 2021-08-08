@@ -1,11 +1,12 @@
 from threading import Timer # 多執行緒
 import time 
 from fysom import Fysom # 有限狀態
-
+import argparse
 ###################自定模組####################
 from IFTTT import send_msg #傳送訊息
 from voice_detect import get_command # 辨認語音指令
-
+from voice_output import praise, ans_is_wrong # 讚美語句
+from object_detect import get_object # 辨認物體
 ###################自定模組####################
 
 def timer_msg():
@@ -14,9 +15,35 @@ def timer_msg():
     # send_msg("1","2","3")
     Timer(100, timer_msg).start()  # 每100秒执行一次
 
+def args_parser():
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument(
+        '--model', help='File path of .tflite file.', required=False,
+        default='mobilenet_ssd_v2_coco_quant.tflite')
+    parser.add_argument(
+        '--labels', help='File path of labels file.', required=False,
+        default='coco_labels.txt')
+    parser.add_argument(
+        '--threshold',
+        help='Score threshold for detected objects.',
+        required=False,
+        type=float,
+        default=0.7)
+    parser.add_argument(
+        '--video',
+        help='Video number',
+        required=False,
+        type=int,
+        default=0)
+    args = parser.parse_args()
+    return args
+
 if __name__ == "__main__":
     
-    timer_msg() # 定時傳送IFTTT訊息
+    args = args_parser() # 讀取參數
+
+    # timer_msg() # 定時傳送IFTTT訊息
     
     # 定義有限狀態機
     state = Fysom(initial = "listen",
@@ -31,8 +58,8 @@ if __name__ == "__main__":
                 ("select_end","listen", "end")
         ]
     )
-    while state.current != "end":
-
+    while True :
+        print("Now state = %s" % state.current)
         # 辨認語音指令
         if state.current == "listen":
             select = get_command()
@@ -44,37 +71,46 @@ if __name__ == "__main__":
                 state.select_end()
             continue
 
+
         # 自由探索模式
         if state.current == "camera_get":
-            label = get_object() // TODO: 包
+            label = get_object(args) # TODO: 一個改多個
             state.show_ans()
             continue
 
         # 顯示答案
         if state.current == "Answer":
-            // TODO: 顯示結果
+            # TODO: 顯示結果
+            praise(label)
             state.what_end()
+            continue
 
         # 物品探索模式
         if state.current == "Question":
-            Q = \\ TODO: 
+            Q = "person" # TODO 隨機產生問題
             state.to_find()
+            continue
 
         
         # 檢查是否符合
         if state.current == "camera_check":
-            label = get_object()
+            label = get_object(args)
             if label == Q:
                 state.check_yes()
+            else:
+                
+                ans_is_wrong(label, Q)
+            continue
         
         # 讚美
         if state.current == "praise":
-            // TODO: 讚美內容
+            praise(label)
             state.where_end()
+            continue
 
         # 結束
         if state.current == "end":
-            break
+            print("結束學習相機")
             exit()
         
     
