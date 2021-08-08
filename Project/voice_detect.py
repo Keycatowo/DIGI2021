@@ -20,7 +20,7 @@ def get_command():
                 r.adjust_for_ambient_noise(source)
                 if (r.energy_threshold < 2000):
                     r.energy_threshold = 2000
-                print("Set minimum energy threshold to {}".format(r.energy_threshold))
+                # print("Set minimum energy threshold to {}".format(r.energy_threshold))
 
                 print("Say something!")
                 audio = r.listen(source)
@@ -39,7 +39,7 @@ def get_command():
                         print('自由拍照模式')
                         return "select_what"
                     
-                    elif re.search('\s*它在哪裡\s*',speechtext):
+                    elif re.search('\s*在哪裡\s*',speechtext):
                         print('物品探索模式')
                         return "select_where"
                     
@@ -75,6 +75,7 @@ def get_command():
                         
     except KeyboardInterrupt:
         print("Quit")
+        return 
 
 
 
