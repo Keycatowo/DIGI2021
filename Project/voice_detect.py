@@ -2,13 +2,19 @@ import speech_recognition as sr
 import time
 import threading
 import re
+import json
 # import requests
 
-
+def ReadCommand():
+    commandFile = open("digiCommands.json","r")
+    commandsInput = json.load(commandFile)
+    commandFile.close()
+    return commandsInput
 
 def get_command():
     try:
-
+        # 讀指令檔
+        commandsInput = ReadCommand()
         while True:
             r = sr.Recognizer()
             m = sr.Microphone()
@@ -35,44 +41,11 @@ def get_command():
                     speechtext = speechtext.replace(' ', '')
                     print("You said: " + speechtext)
 
-                    if re.search('\s*這是什麼\s*',speechtext):
-                        print('選擇-自由拍照模式')
-                        return "select_what"
-                    
-                    elif re.search('\s*在哪裡\s*',speechtext):
-                        print('選擇-物品探索模式')
-                        return "select_where"
-                    
-                    elif re.search('\s*結束\s*',speechtext):
-                        print('結束程式')
-                        return "select_end"
+                    for key in commandsInput.keys():
+                        if key in speechtext:
+                            print(commandsInput[key][1])
+                            return commandsInput[key][0]
 
-                    # elif re.search('\s*關冷氣\s*',speechtext):
-                    #     print('冷氣機已關閉')
-
-                    # elif re.search('\s*開電扇\s*',speechtext):
-                    #     print('電風扇已開啟')
-
-                    # elif re.search('\s*關電扇\s*',speechtext):
-                    #     print('電風扇已關閉')
-
-                    # elif re.search('\s*開電燈\s*',speechtext):
-                    #     print('電燈已開啟')
-
-                    # elif re.search('\s*關電燈\s*',speechtext):
-                    #     print('電燈已關閉')
-
-
-                    # elif re.search('\s*救命\s*',speechtext):
-                    #     print('救命訊息已發送至手機')
-                    #     LINE_URL='https://maker.ifttt.com/trigger/' + LINE_event_name + '/with/key/' + LINE_key
-                    #     r = requests.post(LINE_URL, params={"value1":'有人喊救命',"value2":'來自家裡',"value3":'JACK'})
-
-                        
-                    # elif re.search('\s*結束程式\s*',speechtext):
-                    #     print('結束程式運作')
-                    #     break
-                        
     except KeyboardInterrupt:
         print("Quit")
         return 
