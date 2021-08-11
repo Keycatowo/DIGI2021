@@ -33,3 +33,13 @@ def ans_is_wrong(find, right):
         speak(sentence,lang)
         time.sleep(2)
 
+def say_welcome():
+    s = []
+    s.append(("歡迎使用DIGI牌學習相機", "zh"))
+    s.append(("Welcome to using DIGI study camera!", "en"))
+    s.append(("請選擇自由拍照模式或是物品探索模式", "zh"))
+
+    for sentence,lang in s:
+        # print(sentence)
+        speak(sentence,lang)
+        time.sleep(3)

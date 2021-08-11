@@ -5,7 +5,7 @@ import argparse
 ###################自定模組####################
 from IFTTT import send_msg #傳送訊息
 from voice_detect import get_command # 辨認語音指令
-from voice_output import praise, ans_is_wrong # 讚美語句
+from voice_output import praise, ans_is_wrong, say_welcome # 讚美語句
 from object_detect import get_object # 辨認物體
 ###################自定模組####################
 
@@ -36,6 +36,12 @@ def args_parser():
         required=False,
         type=int,
         default=0)
+    parser.add_argument(
+        '--debug',
+        help='Debug without some info reading',
+        required=False,
+        type=bool,
+        default=0)
     args = parser.parse_args()
     return args
 
@@ -46,8 +52,9 @@ if __name__ == "__main__":
     # timer_msg() # 定時傳送IFTTT訊息
     
     # 定義有限狀態機
-    state = Fysom(initial = "listen",
-            events=[("select_what", "listen", "camera_get"),
+    state = Fysom(initial = "start",
+            events=[("welcome", "start", "listen"),
+                ("select_what", "listen", "camera_get"),
                 ("select_where", "listen", "Question"),
                 ("show_ans", "camera_get", "Answer"),
                 ("what_end", "Answer", "listen"),
@@ -58,8 +65,18 @@ if __name__ == "__main__":
                 ("select_end","listen", "end")
         ]
     )
+    if args.debug == True:
+        state.welcome()
+
+
     while True :
         print("Now state = %s" % state.current)
+        # 歡迎詞
+        if state.current == "start":
+            say_welcome()
+            state.welcome()
+            continue
+
         # 辨認語音指令
         if state.current == "listen":
             select = get_command()
