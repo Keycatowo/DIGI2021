@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
         # 物品探索模式
         if state.current == "Question":
-            Q = "person" # TODO 隨機產生問題
+            Q = "bottle" # TODO 隨機產生問題
             state.to_find()
             continue
 

@@ -15,19 +15,19 @@ def get_command():
             m.RATE = 44100
             m.CHUNK = 512
 
-            print("A moment of silence, please...")
+            # print("")
             with m as source:
                 r.adjust_for_ambient_noise(source)
                 if (r.energy_threshold < 2000):
                     r.energy_threshold = 2000
                 # print("Set minimum energy threshold to {}".format(r.energy_threshold))
 
-                print("Say something!")
+                print("\r聆聽指令中...",end="")
                 audio = r.listen(source)
-                print("Got it! Now to recognize it...")
+                print("\r正在為您搜尋",end="")
 
                 speechtext = r.recognize_google(audio,language='zh',show_all=True) #Load Google Speech Recognition API
-                print(type(speechtext)) #dict
+                # print(type(speechtext)) #dict
                 if len(speechtext) == 0:
                     pass
                 else:
@@ -36,11 +36,11 @@ def get_command():
                     print("You said: " + speechtext)
 
                     if re.search('\s*這是什麼\s*',speechtext):
-                        print('自由拍照模式')
+                        print('選擇-自由拍照模式')
                         return "select_what"
                     
                     elif re.search('\s*在哪裡\s*',speechtext):
-                        print('物品探索模式')
+                        print('選擇-物品探索模式')
                         return "select_where"
                     
                     elif re.search('\s*結束\s*',speechtext):

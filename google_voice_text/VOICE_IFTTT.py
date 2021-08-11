@@ -4,8 +4,8 @@ import threading
 import re
 import requests
 
-LINE_event_name = 'DIGI_LINE'
-LINE_key = 'RLoJsN4GIsV84Rmq6Y7fJ'
+LINE_event_name = 'msg01'
+LINE_key = 'cW9ZFBa6b9fuoH1z3FBLRu'
 
 try:
 

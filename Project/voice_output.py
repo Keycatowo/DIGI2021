@@ -17,7 +17,7 @@ def praise(label):
     s.append(("恭喜你找到了%s" % label, "zh"))
 
     for sentence, lang in s:
-        print(sentence)
+        # print(sentence)
         speak(sentence,lang)
         time.sleep(2)
 
@@ -29,7 +29,7 @@ def ans_is_wrong(find, right):
     s.append(("You should find %s" % right , "en"))
 
     for sentence,lang in s:
-        print(sentence)
+        # print(sentence)
         speak(sentence,lang)
         time.sleep(2)
 
