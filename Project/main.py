@@ -42,6 +42,8 @@ def args_parser():
         required=False,
         type=bool,
         default=0)
+    parser.add_argument(
+      '--file', help='File path of video(.mp4) file.', required=False,default="")
     args = parser.parse_args()
     return args
 

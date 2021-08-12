@@ -80,7 +80,7 @@ def get_object(args):
     _, input_height, input_width, _ = interpreter.get_input_details()[
         0]['shape']
 
-    cap = cv2.VideoCapture(args.video)
+    cap = cv2.VideoCapture(args.video) if args.file == "" else cv2.VideoCapture(args.file)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
 
