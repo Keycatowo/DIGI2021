@@ -6,7 +6,7 @@ import json
 # import requests
 
 def ReadCommand():
-    commandFile = open("digiCommands.json","r")
+    commandFile = open("digiCommands.json","r",encoding="utf-8")
     commandsInput = json.load(commandFile)
     commandFile.close()
     return commandsInput
